@@ -6,9 +6,8 @@ add_library(rgf
 find_package(SDL2 REQUIRED)
 
 target_include_directories(rgf
-    PRIVATE
-        ${SDL2_INCLUDE_DIR}
     PUBLIC
+        ${SDL2_INCLUDE_DIR}    
         ../../include
 )
 
