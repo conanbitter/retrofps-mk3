@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.16)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+project(retrofps VERSION 0.1 LANGUAGES CXX)
+
+set(EXECUTABLE_OUTPUT_PATH ./${CMAKE_BUILD_TYPE})
+
+add_subdirectory(src/rgf)
+
+add_subdirectory(src/fps)

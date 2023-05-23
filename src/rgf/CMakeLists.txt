@@ -1,0 +1,23 @@
+add_library(rgf
+    rgf.cpp
+    ../../include/rgf.hpp
+)
+
+find_package(SDL2 REQUIRED)
+
+target_include_directories(rgf
+    PRIVATE
+        ${SDL2_INCLUDE_DIR}
+    PUBLIC
+        ../../include
+)
+
+target_link_directories(rgf
+    PUBLIC
+        ${SDL2_LIBRARY}
+)
+
+target_link_libraries(rgf
+    SDL2
+    opengl32
+)

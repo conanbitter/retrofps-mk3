@@ -1,0 +1,5 @@
+add_executable(fps
+    main.cpp
+)
+
+target_link_libraries(fps PRIVATE rgf)
