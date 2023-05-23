@@ -1,4 +1,6 @@
+#include "glad/gl.h"
 #include "rgf.hpp"
+#include <iostream>
 
 App& App::getInstance() {
     static App theInstance;
@@ -9,7 +11,7 @@ void App::initSDL(const std::string& title) {
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     window = SDL_CreateWindow(title.c_str(),
@@ -20,6 +22,10 @@ void App::initSDL(const std::string& title) {
                               SDL_WINDOW_OPENGL);
 
     context = SDL_GL_CreateContext(window);
+    int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
+    std::cout << "OpenGL version " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
+
+    glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
     keyboardState = SDL_GetKeyboardState(nullptr);
 }
 
@@ -32,6 +38,7 @@ void App::init(const std::string title, int width, int height, int scale) {
     windowHeight = frameHeight * scale;
 
     initSDL(title);
+    glViewport(0, 0, windowWidth, windowHeight);
 
     isInitComplete = true;
 }
@@ -57,7 +64,7 @@ void App::run() {
                     break;
             }
         }
-
+        glClear(GL_COLOR_BUFFER_BIT);
         SDL_GL_SwapWindow(window);
         SDL_Delay(5);
     }
