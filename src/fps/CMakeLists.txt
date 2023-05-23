@@ -3,3 +3,8 @@ add_executable(fps
 )
 
 target_link_libraries(fps PRIVATE rgf)
+
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set_property(TARGET fps PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+    target_link_options(fps PRIVATE -SUBSYSTEM:WINDOWS -ENTRY:mainCRTStartup)
+endif()

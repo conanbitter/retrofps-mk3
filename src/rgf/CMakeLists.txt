@@ -20,3 +20,7 @@ target_link_libraries(rgf
     SDL2
     opengl32
 )
+
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set_property(TARGET rgf PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+endif()
