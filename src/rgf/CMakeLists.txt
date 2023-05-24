@@ -1,7 +1,8 @@
 add_library(rgf
     glad/gl.h
     glad/gl.c
-    rgf.cpp
+    app.hpp
+    app.cpp
     ../../include/rgf.hpp
     renderer.hpp
     renderer.cpp

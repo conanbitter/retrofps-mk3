@@ -1,7 +1,16 @@
 #pragma once
 
 #include "glad/gl.h"
-#include "rgf.hpp"
+
+class App;
+
+#pragma pack(push, 1)
+struct Color {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+};
+#pragma pack(pop)
 
 class Renderer {
    public:

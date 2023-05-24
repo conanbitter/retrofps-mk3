@@ -1,5 +1,5 @@
 #include "glad/gl.h"
-#include "rgf.hpp"
+#include "app.hpp"
 #include <iostream>
 
 App& App::getInstance() {

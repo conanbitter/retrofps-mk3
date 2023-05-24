@@ -25,7 +25,6 @@ class TestScene : public Scene {
 
     void onUnload(App& app, Renderer& gfx) override {
         Scene::onUnload(app, gfx);
-        Log("Unload");
     }
 
     void onUpdate(float deltaTime, App& app, Renderer& gfx) override {
