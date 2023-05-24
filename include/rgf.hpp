@@ -3,14 +3,24 @@
 #include <SDL.h>
 #include <string>
 
+#pragma pack(push, 1)
+struct Color {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+};
+#pragma pack(pop)
+
 class App;
+
+#include "../src/rgf/renderer.hpp"
 
 class Scene {
    public:
-    virtual void onLoad(App& app) { isLoaded = true; }
-    virtual void onUnload(App& app) { isLoaded = false; }
-    virtual void onUpdate(float deltaTime, App& app) {}
-    virtual void onRender(App& app) {}
+    virtual void onLoad(App& app, Renderer& gfx) { isLoaded = true; }
+    virtual void onUnload(App& app, Renderer& gfx) { isLoaded = false; }
+    virtual void onUpdate(float deltaTime, App& app, Renderer& gfx) {}
+    virtual void onRender(App& app, Renderer& gfx) {}
 
    protected:
     bool isLoaded;
@@ -37,6 +47,7 @@ class App {
     const Uint8* keyboardState;
     Scene dummyScene;
     Scene* currentScene;
+    Renderer renderer;
 
     void initSDL(const std::string& title);
     App() : isInitComplete{false}, dummyScene(), currentScene{&dummyScene} {};

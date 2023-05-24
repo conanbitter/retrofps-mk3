@@ -9,23 +9,32 @@ void Log(const char* line) {
     std::cout << line << std::endl;
 }
 
+Color pal[2]{
+    {0, 0, 0},
+    {255, 200, 100}};
+
 class TestScene : public Scene {
-    void onLoad(App& app) override {
-        Scene::onLoad(app);
-        Log("Load");
+    int x;
+    int y;
+
+    void onLoad(App& app, Renderer& gfx) override {
+        Scene::onLoad(app, gfx);
+        gfx.setPalette(pal, 0, 2);
+        gfx.clear(0);
     }
 
-    void onUnload(App& app) override {
-        Scene::onUnload(app);
+    void onUnload(App& app, Renderer& gfx) override {
+        Scene::onUnload(app, gfx);
         Log("Unload");
     }
 
-    void onUpdate(float deltaTime, App& app) override {
-        Log("Update");
+    void onUpdate(float deltaTime, App& app, Renderer& gfx) override {
+        x = rand() % SCREEN_WIDTH;
+        y = rand() % SCREEN_HEIGHT;
     }
 
-    void onRender(App& app) override {
-        Log("Render");
+    void onRender(App& app, Renderer& gfx) override {
+        gfx.putPixel(x, y, 1);
     };
 };
 

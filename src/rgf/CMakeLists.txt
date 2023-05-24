@@ -3,6 +3,10 @@ add_library(rgf
     glad/gl.c
     rgf.cpp
     ../../include/rgf.hpp
+    renderer.hpp
+    renderer.cpp
+    shaders.hpp
+    shaders.cpp
 )
 
 find_package(SDL2 REQUIRED)

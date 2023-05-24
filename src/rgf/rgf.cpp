@@ -38,6 +38,7 @@ void App::init(const std::string title, int width, int height, int scale) {
     windowHeight = frameHeight * scale;
 
     initSDL(title);
+    renderer.init(width, height);
     glViewport(0, 0, windowWidth, windowHeight);
 
     isInitComplete = true;
@@ -65,15 +66,17 @@ void App::run() {
             }
         }
 
-        currentScene->onUpdate(1.0f, *this);
+        currentScene->onUpdate(1.0f, *this, renderer);
 
         glClear(GL_COLOR_BUFFER_BIT);
-        currentScene->onRender(*this);
+        currentScene->onRender(*this, renderer);
+        renderer.update();
+        renderer.present();
 
         SDL_GL_SwapWindow(window);
         SDL_Delay(5);
     }
-    currentScene->onUnload(*this);
+    currentScene->onUnload(*this, renderer);
 }
 
 void App::requestExit() {
@@ -81,11 +84,12 @@ void App::requestExit() {
 }
 
 void App::setScene(Scene* newScene) {
-    currentScene->onUnload(*this);
+    if (!isInitComplete) return;
+    currentScene->onUnload(*this, renderer);
     if (newScene != nullptr) {
         currentScene = newScene;
     } else {
         currentScene = &dummyScene;
     }
-    currentScene->onLoad(*this);
+    currentScene->onLoad(*this, renderer);
 }
