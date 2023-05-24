@@ -55,17 +55,37 @@ App::~App() {
 
 void App::run() {
     SDL_Event event;
-    bool working = true;
-    while (working) {
+    isRunning = true;
+    while (isRunning) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
-                    working = false;
+                    isRunning = false;
                     break;
             }
         }
+
+        currentScene->onUpdate(1.0f, *this);
+
         glClear(GL_COLOR_BUFFER_BIT);
+        currentScene->onRender(*this);
+
         SDL_GL_SwapWindow(window);
         SDL_Delay(5);
     }
+    currentScene->onUnload(*this);
+}
+
+void App::requestExit() {
+    isRunning = false;
+}
+
+void App::setScene(Scene* newScene) {
+    currentScene->onUnload(*this);
+    if (newScene != nullptr) {
+        currentScene = newScene;
+    } else {
+        currentScene = &dummyScene;
+    }
+    currentScene->onLoad(*this);
 }
