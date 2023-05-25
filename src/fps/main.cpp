@@ -1,5 +1,6 @@
 #include "rgf.hpp"
 #include <iostream>
+#include <vector>
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 360;
@@ -9,7 +10,7 @@ void Log(const char* line) {
     std::cout << line << std::endl;
 }
 
-Color pal[2]{
+std::vector<Color> pal{
     {0, 0, 0},
     {255, 200, 100}};
 
@@ -19,7 +20,7 @@ class TestScene : public Scene {
 
     void onLoad(App& app, Renderer& gfx) override {
         Scene::onLoad(app, gfx);
-        gfx.setPalette(pal, 0, 2);
+        gfx.setPalette(pal);
         gfx.clear(0);
     }
 

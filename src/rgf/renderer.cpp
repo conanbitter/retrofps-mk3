@@ -83,12 +83,10 @@ void Renderer::init(int width, int height) {
     glUniform1i(tex_loc, 0);
     glUniform1i(pal_loc, 1);
 
-    framebuffer = new uint8_t[width * height];
+    framebuffer.resize(width * height);
 }
 
 Renderer::~Renderer() {
-    delete[] framebuffer;
-
     if (glIsTexture(frame_texture)) {
         glDeleteTextures(1, &frame_texture);
     }
@@ -108,12 +106,12 @@ Renderer::~Renderer() {
 
 void Renderer::update() {
     glBindTexture(GL_TEXTURE_2D, frame_texture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, framebuffer);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, framebuffer.data());
 }
 
 void Renderer::update_palette() {
     glBindTexture(GL_TEXTURE_2D, pal_texture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1, GL_RGB, GL_UNSIGNED_BYTE, palette);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1, GL_RGB, GL_UNSIGNED_BYTE, palette.data());
 }
 
 void Renderer::present() {
@@ -127,50 +125,32 @@ void Renderer::present() {
 }
 
 void Renderer::clear(uint8_t color) {
-    std::fill_n(framebuffer, width * height, color);
+    std::fill(framebuffer.begin(), framebuffer.end(), color);
 }
 
 void Renderer::putPixel(int x, int y, uint8_t color) {
-    x %= width;
-    if (x < 0) x += width;
-
-    y %= height;
-    if (y < 0) y += height;
-
+    if (
+        x < 0 ||
+        x >= width ||
+        y < 0 ||
+        y >= height) return;
     framebuffer[x + y * width] = color;
 }
 
-void Renderer::putLine(uint8_t colors[], int x, int y, int length) {
-    if (length < 0 || length + x + y * width > width * height) {
-        length = width * height - x + y * width;
-    }
-    std::copy(colors, colors + length, framebuffer + x + y * width);
-}
-
-void Renderer::fillRect(int x, int y, int rectWidth, int rectHeight, uint8_t color) {
-    if (x > width || y > height || rectWidth < 0 || rectHeight < 0) return;
-    if (x < 0) {
-        rectWidth += x;
-        x = 0;
-    }
-    if (x + rectWidth > width) {
-        rectWidth = width - x;
-    }
-    int y1 = y > 0 ? y : 0;
-    int y2 = y + rectHeight < height ? y + rectHeight : height;
-    for (int i = y1; i < y2; i++) {
-        std::fill_n(framebuffer + x + i * width, rectWidth, color);
-    }
-}
-
 void Renderer::setColor(uint8_t index, Color color) {
-    palette[index] = color;
+    if (index >= 0 && index < 256) {
+        palette[index] = color;
+    }
 }
 
-void Renderer::setPalette(Color colors[], uint8_t startIndex, unsigned int count) {
+void Renderer::setPalette(const std::vector<Color>& colors, uint8_t startIndex, int count) {
+    if (count < 0) {
+        count = colors.size();
+    }
     if (startIndex + count > 256) {
         count = 256 - startIndex;
+        if (count <= 0) return;
     }
-    std::copy(colors, colors + count, palette + startIndex);
+    std::copy(colors.begin(), colors.begin() + count, palette.begin() + startIndex);
     update_palette();
 }

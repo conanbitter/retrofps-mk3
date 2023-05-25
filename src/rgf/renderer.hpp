@@ -1,6 +1,8 @@
 #pragma once
 
 #include "glad/gl.h"
+#include <vector>
+#include <array>
 
 class App;
 
@@ -16,10 +18,9 @@ class Renderer {
    public:
     void clear(uint8_t color);
     void putPixel(int x, int y, uint8_t color);
-    void putLine(uint8_t colors[], int x = 0, int y = 0, int length = -1);
     void fillRect(int x, int y, int width, int height, uint8_t color);
     void setColor(uint8_t index, Color color);
-    void setPalette(Color colors[], uint8_t startIndex = 0, unsigned int count = 256);
+    void setPalette(const std::vector<Color>& colors, uint8_t startIndex = 0, int count = -1);
 
     friend App;
 
@@ -31,8 +32,8 @@ class Renderer {
     GLuint vbo;
     GLuint frame_texture;
     GLuint pal_texture;
-    uint8_t* framebuffer = nullptr;
-    Color palette[256];
+    std::vector<uint8_t> framebuffer;
+    std::array<Color, 256> palette;
 
     Renderer() = default;
     Renderer(const Renderer&) = delete;
