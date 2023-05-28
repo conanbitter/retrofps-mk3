@@ -160,22 +160,67 @@ void Renderer::setPalette(const TexturePack& tpak) {
     update_palette();
 }
 
-void Renderer::blit(const Texture& tex, int x, int y) {
-    for (int ty = 0; ty < tex.height; ty++) {
+void boundsCheck(Rect& rect, int x, int y, int width, int height, int texWidth, int texHeight) {
+    if (rect.x < 0) {
+        rect.w -= rect.x;
+        rect.x = 0;
+    }
+    if (x < 0) {
+        rect.w -= x;
+        x = 0;
+    }
+    if (rect.y < 0) {
+        rect.h -= rect.y;
+        rect.y = 0;
+    }
+    if (y < 0) {
+        rect.h -= y;
+        y = 0;
+    }
+    if (rect.x + rect.w >= texWidth) {
+        rect.w = texWidth - rect.x;
+    }
+    if (x + rect.w >= width) {
+        rect.w = width - x;
+    }
+    if (rect.y + rect.h >= texHeight) {
+        rect.h = texHeight - rect.y;
+    }
+    if (y + rect.h >= height) {
+        rect.h = height - y;
+    }
+}
+
+void Renderer::blit(const Texture& tex, int x, int y, Rect rect) {
+    boundsCheck(rect, x, y, width, height, tex.width, tex.height);
+    if (rect.w <= 0 || rect.h <= 0) return;
+
+    for (int ty = 0; ty < rect.h; ty++) {
         std::copy(
-            tex.data.begin() + ty * tex.width,
-            tex.data.begin() + (ty + 1) * tex.width,
-            framebuffer.begin() + ty * width);
+            tex.data.begin() + rect.x + (rect.y + ty) * tex.width,
+            tex.data.begin() + rect.x + (rect.y + ty) * tex.width + rect.w,
+            framebuffer.begin() + x + (y + ty) * width);
+    }
+}
+
+void Renderer::blit(const Texture& tex, int x, int y) {
+    blit(tex, x, y, Rect(0, 0, tex.width, tex.height));
+}
+
+void Renderer::blitTransp(const Texture& tex, int x, int y, Rect rect) {
+    boundsCheck(rect, x, y, width, height, tex.width, tex.height);
+    if (rect.w <= 0 || rect.h <= 0) return;
+
+    uint8_t tranpColor = tex.transparent_color;
+    for (int ty = 0; ty < rect.h; ty++) {
+        for (int tx = 0; tx < rect.w; tx++) {
+            uint8_t color = tex.data[rect.x + tx + (rect.y + ty) * tex.width];
+            if (color == tranpColor) continue;
+            framebuffer[x + tx + (y + ty) * width] = color;
+        }
     }
 }
 
 void Renderer::blitTransp(const Texture& tex, int x, int y) {
-    uint8_t tranpColor = tex.transparent_color;
-    for (int ty = 0; ty < tex.height; ty++) {
-        for (int tx = 0; tx < tex.width; tx++) {
-            uint8_t color = tex.data[tx + ty * tex.width];
-            if (color == tranpColor) continue;
-            framebuffer[tx + ty * width] = color;
-        }
-    }
+    blitTransp(tex, x, y, Rect(0, 0, tex.width, tex.height));
 }

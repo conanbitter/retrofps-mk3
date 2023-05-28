@@ -19,16 +19,29 @@ std::vector<Color> pal{
 class TestScene : public Scene {
     int x;
     int y;
+    int dx;
+    int dy;
+    int w;
+    int h;
+    int back;
+    int front;
     std::unique_ptr<TexturePack> texs;
 
     void onLoad(App& app, Renderer& gfx) override {
         Scene::onLoad(app, gfx);
         texs = std::make_unique<TexturePack>("../../../../assets/test.txs");
+        back = texs->getTextureId("poster 2");
+        front = texs->getTextureId("avatar1");
         gfx.setPalette(pal);
-        gfx.clear(0);
         gfx.setPalette(*texs);
-        gfx.blit(texs->getTexture("poster 2"));
-        gfx.blitTransp(texs->getTexture("avatar1"));
+        gfx.clear(0);
+        w = texs->getTexture(front).getWidth();
+        h = texs->getTexture(front).getHeight();
+
+        x = rand() % (SCREEN_WIDTH - w);
+        y = rand() % (SCREEN_HEIGHT - h);
+        dx = rand() % 2 == 0 ? 1 : -1;
+        dy = rand() % 2 == 0 ? 1 : -1;
     }
 
     void onUnload(App& app, Renderer& gfx) override {
@@ -36,12 +49,17 @@ class TestScene : public Scene {
     }
 
     void onUpdate(float deltaTime, App& app, Renderer& gfx) override {
-        // x = rand() % SCREEN_WIDTH;
-        // y = rand() % SCREEN_HEIGHT;
+        x += dx;
+        y += dy;
+        if (x + w >= SCREEN_WIDTH) dx = -1;
+        if (y + h >= SCREEN_HEIGHT) dy = -1;
+        if (x <= 0) dx = 1;
+        if (y <= 0) dy = 1;
     }
 
-    void onRender(App& app, Renderer& gfx) override{
-        // gfx.putPixel(x, y, 1);
+    void onRender(App& app, Renderer& gfx) override {
+        gfx.blit(texs->getTexture(back));
+        gfx.blitTransp(texs->getTexture(front), x, y);
     };
 };
 

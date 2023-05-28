@@ -15,6 +15,15 @@ struct Color {
 };
 #pragma pack(pop)
 
+struct Rect {
+    int x;
+    int y;
+    int w;
+    int h;
+
+    Rect(int x, int y, int width, int height) : x{x}, y{y}, w{width}, h{height} {}
+};
+
 typedef std::vector<Color> Palette;
 
 class Renderer {
@@ -25,7 +34,9 @@ class Renderer {
     void setPalette(const Palette& colors, uint8_t startIndex = 0, int count = -1);
     void setPalette(const TexturePack& tpak);
     void blit(const Texture& tex, int x = 0, int y = 0);
+    void blit(const Texture& tex, int x, int y, Rect rect);
     void blitTransp(const Texture& tex, int x = 0, int y = 0);
+    void blitTransp(const Texture& tex, int x, int y, Rect rect);
 
     friend class App;
 
