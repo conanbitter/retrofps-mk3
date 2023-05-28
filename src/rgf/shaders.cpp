@@ -52,9 +52,9 @@ GLuint compileShader(const char* source, GLenum shaderType) {
         source};
     glShaderSource(shader, 1, lines, NULL);
     glCompileShader(shader);
-    GLint isCompiled = false;
+    GLint isCompiled = GL_FALSE;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
-    if (isCompiled != true) {
+    if (isCompiled != GL_TRUE) {
         std::string msg;
         if (shaderType == GL_VERTEX_SHADER) {
             msg = "Vertex shader compile error: ";
@@ -78,9 +78,9 @@ GLuint compileShaderProgram(const char* vertexShaderCode, const char* fragmentSh
     glAttachShader(program, compiledVertexShader);
     glAttachShader(program, compiledFragmentShader);
     glLinkProgram(program);
-    GLint result = true;
+    GLint result = GL_FALSE;
     glGetProgramiv(program, GL_LINK_STATUS, &result);
-    if (result != true) {
+    if (result != GL_TRUE) {
         std::cout << "Shader link error: " << getProgramLog(program) << std::endl;
         return 0;
     }
