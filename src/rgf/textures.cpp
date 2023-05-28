@@ -28,7 +28,7 @@ int readI16(std::ifstream &file) {
     return data;
 }
 
-TexturePack::TexturePack(const std::string filename) {
+void TexturePack::load(const std::string filename) {
     std::ifstream file(filename, std::ios::in | std::ios::binary);
 
     // Palette

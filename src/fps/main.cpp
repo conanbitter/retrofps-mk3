@@ -25,18 +25,18 @@ class TestScene : public Scene {
     int h;
     int back;
     int front;
-    std::unique_ptr<TexturePack> texs;
+    TexturePack texs;
 
     void onLoad(App& app, Renderer& gfx) override {
         Scene::onLoad(app, gfx);
-        texs = std::make_unique<TexturePack>("../../../../assets/test.txs");
-        back = texs->getTextureId("poster 2");
-        front = texs->getTextureId("avatar1");
+        texs.load("../../../../assets/test.txs");
+        back = texs.getTextureId("poster 2");
+        front = texs.getTextureId("avatar1");
         gfx.setPalette(pal);
-        gfx.setPalette(*texs);
+        gfx.setPalette(texs);
         gfx.clear(0);
-        w = texs->getTexture(front).getWidth();
-        h = texs->getTexture(front).getHeight();
+        w = texs.getTexture(front).getWidth();
+        h = texs.getTexture(front).getHeight();
 
         x = rand() % (SCREEN_WIDTH - w);
         y = rand() % (SCREEN_HEIGHT - h);
@@ -58,8 +58,8 @@ class TestScene : public Scene {
     }
 
     void onRender(App& app, Renderer& gfx) override {
-        gfx.blit(texs->getTexture(back));
-        gfx.blitTransp(texs->getTexture(front), x, y);
+        gfx.blit(texs.getTexture(back));
+        gfx.blitTransp(texs.getTexture(front), x, y);
     };
 };
 

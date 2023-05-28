@@ -23,7 +23,8 @@ class Texture {
 
 class TexturePack {
    public:
-    TexturePack(const std::string filename);
+    void load(const std::string filename);
+    int count() const { return textures.size(); }
     Texture& getTexture(const std::string name);
     Texture& getTexture(int id);
     int getTextureId(const std::string name);
