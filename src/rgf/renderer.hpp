@@ -14,13 +14,15 @@ struct Color {
 };
 #pragma pack(pop)
 
+typedef std::vector<Color> Palette;
+
 class Renderer {
    public:
     void clear(uint8_t color);
     void putPixel(int x, int y, uint8_t color);
     void fillRect(int x, int y, int width, int height, uint8_t color);
     void setColor(uint8_t index, Color color);
-    void setPalette(const std::vector<Color>& colors, uint8_t startIndex = 0, int count = -1);
+    void setPalette(const Palette& colors, uint8_t startIndex = 0, int count = -1);
 
     friend App;
 

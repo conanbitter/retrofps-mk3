@@ -1,6 +1,8 @@
 #include "rgf.hpp"
 #include <iostream>
 #include <vector>
+#include <memory>
+#include <filesystem>
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 360;
@@ -17,9 +19,11 @@ std::vector<Color> pal{
 class TestScene : public Scene {
     int x;
     int y;
+    std::unique_ptr<TexturePack> texs;
 
     void onLoad(App& app, Renderer& gfx) override {
         Scene::onLoad(app, gfx);
+        texs = std::make_unique<TexturePack>("../../../../assets/test.txs");
         gfx.setPalette(pal);
         gfx.clear(0);
     }
@@ -39,6 +43,7 @@ class TestScene : public Scene {
 };
 
 int main() {
+    std::cout << std::filesystem::current_path() << std::endl;
     TestScene scene;
     App& app = App::getInstance();
     app.init("RetroFPS", SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_SCALE);

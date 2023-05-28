@@ -143,7 +143,7 @@ void Renderer::setColor(uint8_t index, Color color) {
     }
 }
 
-void Renderer::setPalette(const std::vector<Color>& colors, uint8_t startIndex, int count) {
+void Renderer::setPalette(const Palette& colors, uint8_t startIndex, int count) {
     if (count < 0) {
         count = colors.size();
     }

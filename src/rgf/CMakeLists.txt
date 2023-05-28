@@ -8,9 +8,13 @@ add_library(rgf
     renderer.cpp
     shaders.hpp
     shaders.cpp
+    textures.hpp
+    textures.cpp
 )
 
 find_package(SDL2 REQUIRED)
+
+target_compile_features(rgf PRIVATE cxx_std_17)
 
 target_include_directories(rgf
     PUBLIC

@@ -2,6 +2,8 @@ add_executable(fps
     main.cpp
 )
 
+target_compile_features(fps PRIVATE cxx_std_17)
+
 target_link_libraries(fps PRIVATE rgf)
 
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
