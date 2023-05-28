@@ -154,3 +154,28 @@ void Renderer::setPalette(const Palette& colors, uint8_t startIndex, int count) 
     std::copy(colors.begin(), colors.begin() + count, palette.begin() + startIndex);
     update_palette();
 }
+
+void Renderer::setPalette(const TexturePack& tpak) {
+    std::copy(tpak.palette.begin(), tpak.palette.end(), palette.begin() + tpak.paletteOffset);
+    update_palette();
+}
+
+void Renderer::blit(const Texture& tex, int x, int y) {
+    for (int ty = 0; ty < tex.height; ty++) {
+        std::copy(
+            tex.data.begin() + ty * tex.width,
+            tex.data.begin() + (ty + 1) * tex.width,
+            framebuffer.begin() + ty * width);
+    }
+}
+
+void Renderer::blitTransp(const Texture& tex, int x, int y) {
+    uint8_t tranpColor = tex.transparent_color;
+    for (int ty = 0; ty < tex.height; ty++) {
+        for (int tx = 0; tx < tex.width; tx++) {
+            uint8_t color = tex.data[tx + ty * tex.width];
+            if (color == tranpColor) continue;
+            framebuffer[tx + ty * width] = color;
+        }
+    }
+}

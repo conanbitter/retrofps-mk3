@@ -26,6 +26,9 @@ class TestScene : public Scene {
         texs = std::make_unique<TexturePack>("../../../../assets/test.txs");
         gfx.setPalette(pal);
         gfx.clear(0);
+        gfx.setPalette(*texs);
+        gfx.blit(texs->getTexture("poster 2"));
+        gfx.blitTransp(texs->getTexture("avatar1"));
     }
 
     void onUnload(App& app, Renderer& gfx) override {
@@ -33,12 +36,12 @@ class TestScene : public Scene {
     }
 
     void onUpdate(float deltaTime, App& app, Renderer& gfx) override {
-        x = rand() % SCREEN_WIDTH;
-        y = rand() % SCREEN_HEIGHT;
+        // x = rand() % SCREEN_WIDTH;
+        // y = rand() % SCREEN_HEIGHT;
     }
 
-    void onRender(App& app, Renderer& gfx) override {
-        gfx.putPixel(x, y, 1);
+    void onRender(App& app, Renderer& gfx) override{
+        // gfx.putPixel(x, y, 1);
     };
 };
 

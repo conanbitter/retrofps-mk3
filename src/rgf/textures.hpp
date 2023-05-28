@@ -5,8 +5,6 @@
 #include <map>
 #include "renderer.hpp"
 
-class TexturePack;
-
 class Texture {
    public:
     int getWidth() const { return width; }
@@ -19,7 +17,8 @@ class Texture {
     int transparent_color;
     std::vector<uint8_t> data;
 
-    friend TexturePack;
+    friend class TexturePack;
+    friend Renderer;
 };
 
 class TexturePack {
@@ -36,4 +35,6 @@ class TexturePack {
     std::map<std::string, int> names;
     Palette palette;
     int paletteOffset;
+
+    friend Renderer;
 };

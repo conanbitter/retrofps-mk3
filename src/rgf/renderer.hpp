@@ -4,7 +4,8 @@
 #include <vector>
 #include <array>
 
-class App;
+class TexturePack;
+class Texture;
 
 #pragma pack(push, 1)
 struct Color {
@@ -20,11 +21,13 @@ class Renderer {
    public:
     void clear(uint8_t color);
     void putPixel(int x, int y, uint8_t color);
-    void fillRect(int x, int y, int width, int height, uint8_t color);
     void setColor(uint8_t index, Color color);
     void setPalette(const Palette& colors, uint8_t startIndex = 0, int count = -1);
+    void setPalette(const TexturePack& tpak);
+    void blit(const Texture& tex, int x = 0, int y = 0);
+    void blitTransp(const Texture& tex, int x = 0, int y = 0);
 
-    friend App;
+    friend class App;
 
    private:
     int width;
