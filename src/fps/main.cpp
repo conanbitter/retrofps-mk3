@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <filesystem>
+#include <utility>
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 360;
@@ -42,6 +43,11 @@ class TestScene : public Scene {
         y = rand() % (SCREEN_HEIGHT - h);
         dx = rand() % 2 == 0 ? 1 : -1;
         dy = rand() % 2 == 0 ? 1 : -1;
+
+        Texture& head = texs.getTexture(front);
+        for (int i = 0; i < head.getWidth() * head.getHeight(); i += 2) {
+            head[i] = head.getTransparent();
+        }
     }
 
     void onUnload(App& app, Renderer& gfx) override {
@@ -58,6 +64,14 @@ class TestScene : public Scene {
     }
 
     void onRender(App& app, Renderer& gfx) override {
+        /*Texture& head = texs.getTexture(front);
+        for (int i = 0; i < head.getWidth() * head.getHeight(); i++) {
+            int tx = rand() % head.getWidth();
+            int ty = rand() % head.getHeight();
+            if (head[std::pair<int, int>(tx, ty)] == head.getTransparent()) continue;
+            head[std::pair<int, int>(tx, ty)] = head.getTransparent();
+            break;
+        }*/
         gfx.blit(texs.getTexture(back));
         gfx.blitTransp(texs.getTexture(front), x, y);
     };

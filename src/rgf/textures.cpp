@@ -1,13 +1,21 @@
 #include "textures.hpp"
 #include <fstream>
 
-uint8_t Texture::getPixel(int x, int y) {
+void Texture::wrapCoords(int &x, int &y) const {
     x %= width;
     if (x < 0) x += width;
     y %= height;
     if (y < 0) y += height;
+}
 
+uint8_t Texture::pixel(int x, int y) const {
+    wrapCoords(x, y);
     return data[x + y * width];
+}
+
+void Texture::pixel(int x, int y, uint8_t color) {
+    wrapCoords(x, y);
+    data[x + y * width] = color;
 }
 
 int readU8(std::ifstream &file) {
