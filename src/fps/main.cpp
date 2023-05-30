@@ -31,7 +31,7 @@ class TestScene : public Scene {
     void onLoad(App& app, Renderer& gfx) override {
         Scene::onLoad(app, gfx);
         texs.load("../../../../assets/test.txs");
-        back = texs.getTextureId("poster 2");
+        back = texs.getTextureId("poster 3");
         front = texs.getTextureId("avatar1");
         gfx.setPalette(pal);
         gfx.setPalette(texs);
