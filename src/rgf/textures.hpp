@@ -4,7 +4,25 @@
 #include <string>
 #include <map>
 #include <utility>
-#include "renderer.hpp"
+
+struct Rect {
+    int x;
+    int y;
+    int w;
+    int h;
+
+    Rect(int x, int y, int width, int height) : x{x}, y{y}, w{width}, h{height} {}
+};
+
+#pragma pack(push, 1)
+struct Color {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+};
+#pragma pack(pop)
+
+typedef std::vector<Color> Palette;
 
 class Texture {
    public:
@@ -26,7 +44,7 @@ class Texture {
     uint8_t& operator[](int index) { return data[index]; }
     uint8_t& operator[](std::pair<int, int> coords) { return data[coords.first + coords.second * width]; }
 
-   private:
+   protected:
     int width;
     int height;
     int transparent_color;
@@ -34,7 +52,6 @@ class Texture {
     void wrapCoords(int& x, int& y) const;
 
     friend class TexturePack;
-    friend Renderer;
 };
 
 class TexturePack {
@@ -53,5 +70,5 @@ class TexturePack {
     Palette palette;
     int paletteOffset;
 
-    friend Renderer;
+    friend class Renderer;
 };

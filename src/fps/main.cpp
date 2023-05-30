@@ -75,6 +75,7 @@ class TestScene : public Scene {
         }*/
         gfx.blit(texs.getTexture(back));
         gfx.blitTransp(texs.getTexture(front), x, y);
+        texs.getTexture(back).copy(gfx);
     };
 };
 

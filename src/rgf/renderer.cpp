@@ -83,7 +83,7 @@ void Renderer::init(int width, int height) {
     glUniform1i(tex_loc, 0);
     glUniform1i(pal_loc, 1);
 
-    framebuffer.resize(width * height);
+    data.resize(width * height);
 }
 
 Renderer::~Renderer() {
@@ -106,7 +106,7 @@ Renderer::~Renderer() {
 
 void Renderer::update() {
     glBindTexture(GL_TEXTURE_2D, frame_texture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, framebuffer.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, data.data());
 }
 
 void Renderer::update_palette() {
@@ -122,19 +122,6 @@ void Renderer::present() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, pal_texture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
-}
-
-void Renderer::clear(uint8_t color) {
-    std::fill(framebuffer.begin(), framebuffer.end(), color);
-}
-
-void Renderer::putPixel(int x, int y, uint8_t color) {
-    if (
-        x < 0 ||
-        x >= width ||
-        y < 0 ||
-        y >= height) return;
-    framebuffer[x + y * width] = color;
 }
 
 void Renderer::setColor(uint8_t index, Color color) {
@@ -158,69 +145,4 @@ void Renderer::setPalette(const Palette& colors, uint8_t startIndex, int count) 
 void Renderer::setPalette(const TexturePack& tpak) {
     std::copy(tpak.palette.begin(), tpak.palette.end(), palette.begin() + tpak.paletteOffset);
     update_palette();
-}
-
-static void boundsCheck(Rect& rect, int x, int y, int width, int height, int texWidth, int texHeight) {
-    if (rect.x < 0) {
-        rect.w -= rect.x;
-        rect.x = 0;
-    }
-    if (x < 0) {
-        rect.w -= x;
-        x = 0;
-    }
-    if (rect.y < 0) {
-        rect.h -= rect.y;
-        rect.y = 0;
-    }
-    if (y < 0) {
-        rect.h -= y;
-        y = 0;
-    }
-    if (rect.x + rect.w >= texWidth) {
-        rect.w = texWidth - rect.x;
-    }
-    if (x + rect.w >= width) {
-        rect.w = width - x;
-    }
-    if (rect.y + rect.h >= texHeight) {
-        rect.h = texHeight - rect.y;
-    }
-    if (y + rect.h >= height) {
-        rect.h = height - y;
-    }
-}
-
-void Renderer::blit(const Texture& tex, int x, int y, Rect rect) {
-    boundsCheck(rect, x, y, width, height, tex.width, tex.height);
-    if (rect.w <= 0 || rect.h <= 0) return;
-
-    for (int ty = 0; ty < rect.h; ty++) {
-        std::copy(
-            tex.data.begin() + rect.x + (rect.y + ty) * tex.width,
-            tex.data.begin() + rect.x + (rect.y + ty) * tex.width + rect.w,
-            framebuffer.begin() + x + (y + ty) * width);
-    }
-}
-
-void Renderer::blit(const Texture& tex, int x, int y) {
-    blit(tex, x, y, Rect(0, 0, tex.width, tex.height));
-}
-
-void Renderer::blitTransp(const Texture& tex, int x, int y, Rect rect) {
-    boundsCheck(rect, x, y, width, height, tex.width, tex.height);
-    if (rect.w <= 0 || rect.h <= 0) return;
-
-    uint8_t tranpColor = tex.transparent_color;
-    for (int ty = 0; ty < rect.h; ty++) {
-        for (int tx = 0; tx < rect.w; tx++) {
-            uint8_t color = tex.data[rect.x + tx + (rect.y + ty) * tex.width];
-            if (color == tranpColor) continue;
-            framebuffer[x + tx + (y + ty) * width] = color;
-        }
-    }
-}
-
-void Renderer::blitTransp(const Texture& tex, int x, int y) {
-    blitTransp(tex, x, y, Rect(0, 0, tex.width, tex.height));
 }
