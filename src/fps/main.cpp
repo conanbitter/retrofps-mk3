@@ -45,6 +45,7 @@ class TestScene : public Scene {
         dy = rand() % 2 == 0 ? 1 : -1;
 
         Texture& head = texs.getTexture(front);
+        texs.getTexture(back).blitTransp(head, 40, 40);
         for (int i = 0; i < head.getWidth() * head.getHeight(); i += 2) {
             head[i] = head.getTransparent();
         }

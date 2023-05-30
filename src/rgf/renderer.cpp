@@ -160,7 +160,7 @@ void Renderer::setPalette(const TexturePack& tpak) {
     update_palette();
 }
 
-void boundsCheck(Rect& rect, int x, int y, int width, int height, int texWidth, int texHeight) {
+static void boundsCheck(Rect& rect, int x, int y, int width, int height, int texWidth, int texHeight) {
     if (rect.x < 0) {
         rect.w -= rect.x;
         rect.x = 0;
