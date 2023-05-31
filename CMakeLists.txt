@@ -9,3 +9,5 @@ set(EXECUTABLE_OUTPUT_PATH ./${CMAKE_BUILD_TYPE})
 add_subdirectory(src/rgf)
 
 add_subdirectory(src/fps)
+
+add_subdirectory(src/pixeleffect)
