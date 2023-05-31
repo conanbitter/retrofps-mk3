@@ -12,6 +12,14 @@ const int SCREEN_SCALE = 2;
 class EffectScene : public Scene {
     void onLoad(App& app, Renderer& gfx) override {
         Scene::onLoad(app, gfx);
+        for (int i = 0; i < 256; i++) {
+            gfx.setColor(i, Color(i, i, i));
+        }
+        for (int i = 0; i < 256; i++) {
+            for (int j = 0; j < SCREEN_HEIGHT; j++) {
+                gfx[i + j * SCREEN_WIDTH] = i;
+            }
+        }
     }
 
     void onUnload(App& app, Renderer& gfx) override {

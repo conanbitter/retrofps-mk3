@@ -19,6 +19,9 @@ struct Color {
     uint8_t r;
     uint8_t g;
     uint8_t b;
+
+    Color(uint8_t red, uint8_t green, uint8_t blue) : r{red}, g{green}, b{blue} {}
+    Color() : r{0}, g{0}, b{0} {}
 };
 #pragma pack(pop)
 
@@ -26,6 +29,7 @@ typedef std::vector<Color> Palette;
 
 class Texture {
    public:
+    Texture(int texWidth, int texHeight) : width{texWidth}, height{texHeight}, data(texWidth * texHeight), transparent_color{-1} {}
     int getWidth() const { return width; }
     int getHeight() const { return height; }
     int getTransparent() const { return transparent_color; }
@@ -45,6 +49,7 @@ class Texture {
     uint8_t& operator[](std::pair<int, int> coords) { return data[coords.first + coords.second * width]; }
 
    protected:
+    Texture() : width{0}, height{0}, data(0), transparent_color{-1} {}
     int width;
     int height;
     int transparent_color;

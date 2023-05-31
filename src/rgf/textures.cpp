@@ -126,16 +126,14 @@ void TexturePack::load(const std::string filename) {
     size_t textureCount = readU32(file);
     textures.reserve(textureCount);
     for (int i = 0; i < textureCount; i++) {
-        Texture &newTex = textures.emplace_back();
-
         char name[16];
         file.read(name, 16);
         names[name] = i;
 
-        newTex.width = readU32(file);
-        newTex.height = readU32(file);
+        int width = readU32(file);
+        int height = readU32(file);
+        Texture &newTex = textures.emplace_back(width, height);
         newTex.transparent_color = readI16(file);
-        newTex.data.resize(newTex.width * newTex.height);
         file.read((char *)newTex.data.data(), newTex.width * newTex.height);
     }
 }

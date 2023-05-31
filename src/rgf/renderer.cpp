@@ -128,6 +128,7 @@ void Renderer::setColor(uint8_t index, Color color) {
     if (index >= 0 && index < 256) {
         palette[index] = color;
     }
+    update_palette();
 }
 
 void Renderer::setPalette(const Palette& colors, uint8_t startIndex, int count) {
